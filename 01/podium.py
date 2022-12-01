@@ -8,8 +8,7 @@ bronze = 0
 with open('calories.txt') as f:
   for line in f:
     if line != "\n":
-      iline = int(line)
-      runningTotal += iline
+      runningTotal += int(line)
     else:
       #unrolled evaluation for podium
       if runningTotal > gold:
