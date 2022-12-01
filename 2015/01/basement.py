@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 floor = 0
 position = 0
 

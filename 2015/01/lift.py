@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 floor = 0
 
 #could count ( and ), but simpler to walk chars in line
