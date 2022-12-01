@@ -2,7 +2,7 @@
 runningTotal = 0
 elves = []
 
-with open('calories.txt') as f:
+with open('input.txt') as f:
   for line in f:
     if line != "\n":
       runningTotal += int(line)
