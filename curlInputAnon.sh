@@ -20,5 +20,5 @@ fi
 OUTPATH="./$YEAR/$DAY"
 
 echo "outpath: $OUTPATH"
-COOKIE="session=53616c7465645f5f8a935e9d049a52ddbc50a9a30523ad241643d073dda2effb3279faa578e81a30168c8fb8282741af9855c570c0f4f90693569a93052e7348"
+COOKIE="session={yoursessionhere}"
 curl $URL --cookie $COOKIE > "$OUTPATH/input.txt"
