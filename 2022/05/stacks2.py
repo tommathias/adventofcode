@@ -47,8 +47,12 @@ with open(fileName) as f:
     desti = int(move[5])-1
     #print(f'moving {count} from {src} to {dest}')
     #print(stacks)
+    temp = []
     for i in range(count):
-      stacks[desti].append(stacks[srci].pop())
+      #could take slice in order, but simulate by popping into temp and pushing out
+      temp.append(stacks[srci].pop())
+    for i in range(count):
+      stacks[desti].append(temp.pop())
     #print(stacks)
 
 
