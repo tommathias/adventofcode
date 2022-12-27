@@ -1,33 +1,41 @@
 #!/usr/bin/python3
-def isVisibleN(x, y, forest):
+def getScoreN(x, y, forest):
+  scoreN = 0
   h = forest[y][x]
   for i in range(y-1, -1, -1): #lower range is -1 due to 0 based index
+    scoreN += 1
     if(forest[i][x] >= h):
-      return False
-  return True
+      return scoreN
+  return scoreN
 
-def isVisibleE(x, y, forest):
+def getScoreE(x, y, forest):
+  scoreE = 0
   limit = len(forest[y])
   h = forest[y][x]
   for i in range(x+1, limit, 1):
+    scoreE += 1
     if(forest[y][i] >= h):
-      return False
-  return True
+      return scoreE
+  return scoreE
 
-def isVisibleS(x, y, forest):
+def getScoreS(x, y, forest):
+  scoreS = 0
   limit = len(forest)
   h = forest[y][x]
   for i in range(y+1, limit, 1):
+    scoreS += 1
     if(forest[i][x] >= h):
-      return False
-  return True
+      return scoreS
+  return scoreS
 
-def isVisibleW(x, y, forest):
+def getScoreW(x, y, forest):
+  scoreW = 0
   h = forest[y][x]
   for i in range(x-1, -1, -1): #lower range is -1 due to 0 based index
+    scoreW += 1
     if(forest[y][i] >= h):
-      return False
-  return True
+      return scoreW
+  return scoreW
 
 forest = []
 with open('input.txt') as f:
@@ -41,18 +49,16 @@ with open('input.txt') as f:
 #N.B. because forest is built row by row, co-ordinates are forest[y][x]
 #print(forest)
 
-visibleCount = 0
+highScore = 0
 pointerY = 0
 for row in forest:
   pointerX = 0
   for tree in row:
-    #python short-circuits boolean logic
-    if (isVisibleN(pointerX, pointerY, forest) or
-    isVisibleE(pointerX, pointerY, forest) or
-    isVisibleS(pointerX, pointerY, forest) or
-    isVisibleW(pointerX, pointerY, forest)):
-      visibleCount +=1
+    score = getScoreN(pointerX, pointerY, forest) * getScoreE(pointerX, pointerY, forest) * getScoreS(pointerX, pointerY, forest) * getScoreW(pointerX, pointerY, forest)
+    #print(f'({pointerX}, {pointerY}) score: {score}')
+    if (score > highScore):
+      highScore = score
     pointerX+=1
   pointerY+=1
 
-print(f'{visibleCount} tree(s) visible')
+print(f'Highest scenic score: {highScore}')
