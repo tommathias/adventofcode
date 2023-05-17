@@ -12,9 +12,8 @@ def aggregateSize(results, pwdStack, fileSize):
     results[path] += int(fileSize)
 
 with open('input.txt') as f:
-  fileSystem = { 'root': {} }
   pwdStack = []
-  results = { 'root' : 0 }
+  results = { }
 
   for line in f:
     if logLevel > 0: print(f'line: {line}')
@@ -41,13 +40,31 @@ with open('input.txt') as f:
     if logLevel > 0: print(f'pwdStack: {pwdStack}')
     if logLevel > 0: print('=====')
 
-if logLevel > 2: print(f'fileSystem: {fileSystem}')
 print(results)
 
+# part 1
 result = 0
 for dirSize in results.values():
   if dirSize <= 100000:
     result += dirSize
 print(result)
+
+# part 2
+
+total = 70000000
+needed = 30000000
+
+used = results['/root']
+unused = total - used
+toDelete = needed - unused
+
+#get dirs that match, pick smallest
+candidates = []
+for size in results.values():
+  if size > toDelete:
+    candidates.append(size)
+candidates.sort()
+print(candidates[0])
+
 
 print('Thank you for playing Wing Commander')
