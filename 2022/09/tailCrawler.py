@@ -54,7 +54,7 @@ def main():
   tailHistory = []
   printCoords(head, tail)
 
-  with open('input.txt') as f:
+  with open('test.txt') as f:
     for line in f:
       if loggingLevel > 1: print(line)
       doMove(line, head, tail, tailHistory)
