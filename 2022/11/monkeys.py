@@ -17,7 +17,7 @@ def parseMonkey(monkeyBuffer):
     'inspectedItemCount': 0
     }
 
-def doMonkeyInspectItemAt(monkey, i):
+def doMonkeyInspectItemAt(monkey, i: int, worryFactor: int):
   item = monkey['items'][i]
   operator = monkey['operator']
   operand = monkey['operand']
@@ -33,20 +33,23 @@ def doMonkeyInspectItemAt(monkey, i):
     case _:
       raise 'no operator match'
 
-  monkey['items'][i] = item // 3
+  monkey['items'][i] = item // worryFactor
 
   monkey['inspectedItemCount'] += 1
   return monkey['items'][i]
 
-def doMonkeyTestItem(item: int, testDividend: int, trueMonkeyTarget: int, falseMonkeyTarget: int, monkeys: list):
-  if item % testDividend == 0: monkeys[trueMonkeyTarget]['items'].append(item)
-  else: monkeys[falseMonkeyTarget]['items'].append(item)
+def doMonkeyTestItem(item: int, monkey, monkeys: list):
+  testDividend = monkey['testDividend']
+  trueMonkeyTarget = monkey['trueMonkeyTarget']
+  falseMonkeyTarget = monkey['falseMonkeyTarget']
 
-def doRound(monkeys):
+  monkeys[trueMonkeyTarget]['items'].append(item) if item % testDividend == 0 else monkeys[falseMonkeyTarget]['items'].append(item)
+
+def doRound(monkeys, worryFactor: int):
   for monkey in monkeys:
     for i, item in list(enumerate(monkey['items']))[::-1]: #iterate backwards to pop off the tail and prevent index out of range
-      inspectedItem = doMonkeyInspectItemAt(monkey, i)
-      doMonkeyTestItem(inspectedItem, monkey['testDividend'], monkey['trueMonkeyTarget'], monkey['falseMonkeyTarget'], monkeys)
+      inspectedItem = doMonkeyInspectItemAt(monkey, i, worryFactor)
+      doMonkeyTestItem(inspectedItem, monkey, monkeys)
       monkey['items'].pop()
     #monkey['items'] = [] #monkey will throw everything and end up empty handed
 
@@ -66,6 +69,8 @@ def calculateMonkeyBusyness(monkeys):
 def main():
   monkeys = []
   monkeyBuffer = []
+  worryFactor = 3
+
   with open('input.txt') as f:
     for line in f:
       monkeyBuffer.append(line)
@@ -76,7 +81,7 @@ def main():
 
   if verbosityLevel > 1: print(monkeys)
   for r in range(20):
-    doRound(monkeys)
+    doRound(monkeys, worryFactor)
   if verbosityLevel > 0: printMonkeys(monkeys)
 
   print(f'MonkeyBusyness: {calculateMonkeyBusyness(monkeys)}')
