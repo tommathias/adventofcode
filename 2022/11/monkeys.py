@@ -13,10 +13,15 @@ def parseMonkey(monkeyBuffer):
     'operand': operation[5].strip(),
     'testDividend': testDividend,
     'trueMonkeyTarget': trueMonkeyTarget,
-    'falseMonkeyTarget': falseMonkeyTarget
+    'falseMonkeyTarget': falseMonkeyTarget,
+    'inspectedItemCount': 0
     }
 
-def doMonkeyInspectItem(operator: str, operand: str, item: int):
+def doMonkeyInspectItemAt(monkey, i):
+  item = monkey['items'][i]
+  operator = monkey['operator']
+  operand = monkey['operand']
+
   if operand == 'old': operand = item
   operand = int(operand)
 
@@ -28,22 +33,40 @@ def doMonkeyInspectItem(operator: str, operand: str, item: int):
     case _:
       raise 'no operator match'
 
-  item = item // 3
+  monkey['items'][i] = item // 3
+
+  monkey['inspectedItemCount'] += 1
+  return monkey['items'][i]
 
 def doMonkeyTestItem(item: int, testDividend: int, trueMonkeyTarget: int, falseMonkeyTarget: int, monkeys: list):
-  if item % testDividend == 0: monkeys[trueMonkeyTarget].append(item)
-  else: monkeys[falseMonkeyTarget].append(item)
+  if item % testDividend == 0: monkeys[trueMonkeyTarget]['items'].append(item)
+  else: monkeys[falseMonkeyTarget]['items'].append(item)
 
-def doRoundOne(monkeys):
+def doRound(monkeys):
   for monkey in monkeys:
-    for item in monkey['items']:
-      doMonkeyInspectItem(monkey['operator'], monkey['operand'], item)
+    for i, item in list(enumerate(monkey['items']))[::-1]: #iterate backwards to pop off the tail and prevent index out of range
+      inspectedItem = doMonkeyInspectItemAt(monkey, i)
+      doMonkeyTestItem(inspectedItem, monkey['testDividend'], monkey['trueMonkeyTarget'], monkey['falseMonkeyTarget'], monkeys)
+      monkey['items'].pop()
     #monkey['items'] = [] #monkey will throw everything and end up empty handed
+
+def printMonkeys(monkeys):
+  for i, monkey in enumerate(monkeys):
+    items = monkey['items']
+    print(f'Monkey {i}: {monkey}')
+
+def calculateMonkeyBusyness(monkeys):
+  def getInspections(monkey):
+    return monkey['inspectedItemCount']
+  monkeys.sort(reverse=True, key=getInspections)
+  if verbosityLevel > 1: printMonkeys(monkeys[0:2])
+
+  return monkeys[0]['inspectedItemCount'] * monkeys[1]['inspectedItemCount']
 
 def main():
   monkeys = []
   monkeyBuffer = []
-  with open('test.txt') as f:
+  with open('input.txt') as f:
     for line in f:
       monkeyBuffer.append(line)
       if len(monkeyBuffer) == 7:
@@ -51,9 +74,12 @@ def main():
         monkeyBuffer = []
       if verbosityLevel > 1: print(line)
 
-  if verbosityLevel > 0: print(monkeys)
-  doRoundOne(monkeys)
-  print(monkeys)
+  if verbosityLevel > 1: print(monkeys)
+  for r in range(20):
+    doRound(monkeys)
+  if verbosityLevel > 0: printMonkeys(monkeys)
+
+  print(f'MonkeyBusyness: {calculateMonkeyBusyness(monkeys)}')
   print('Thank you for playing Wing Commander')
 
 if __name__ == '__main__': main()
