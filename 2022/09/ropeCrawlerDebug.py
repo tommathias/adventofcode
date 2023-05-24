@@ -4,7 +4,7 @@ import time
 import numpy
 
 loggingLevel = 1
-screenMode = 'draw'
+screenMode = 'none'
 redrawFrequency = 'step'
 refreshMode = 'manual'
 
