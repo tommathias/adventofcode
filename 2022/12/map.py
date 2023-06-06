@@ -56,12 +56,14 @@ def heightAt(map: list, coords: tuple):
 def withinMap(map: list, coords: tuple):
   return coords[0] >= 0 and coords[0] < map.width and coords[1] >= 0 and coords[1] < map.height
 
-def canClimb(place: str, neighbour: str):
+def canClimb(from_: str, to: str):
   #handle start and end of walk which have different ord(l) values
-  if place == 'S' and neighbour == 'a': return True
-  if place == 'z' and neighbour == 'E': return True
+  if from_ == 'S': from_ = 'a'
+  if from_ == 'E': from_ = 'z'
+  if to == 'S': to = 'a'
+  if to == 'E': to = 'z'
 
-  return abs(ord(place) - ord(neighbour)) < 2
+  return abs(ord(from_) - ord(to)) < 2
 
 def getNeighbours(walk: walk, coords: tuple):
   neighbours = []
@@ -106,7 +108,8 @@ def walkMap(map: map):
   start = findStart(map)
   theWalk = walk(map, 10_000)
   step(start, theWalk, 1)
-  print(theWalk.highestPoint)
+  print(f'Highest point: {chr(theWalk.highestPoint[0])}, found after {theWalk.highestPoint[1]} steps')
+  print('should be lower than 509')
 
 def main():
   #create 2d array of map
