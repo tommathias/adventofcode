@@ -4,7 +4,16 @@ import cProfile
 
 verbosityLevel = 1
 
-def parseMonkey(monkeyBuffer):
+class Monkey():
+  items: list
+  operator: str
+  operand: str
+  testDividend: int
+  trueMonkeyTarget: int
+  falseMonkeyTarget: int
+  inspectedItemCount: int
+
+def parseMonkey(monkeyBuffer: Monkey) -> Monkey:
   items = list(map(int, monkeyBuffer[1].split(':')[1].split(','))) #py3 map(fn, []) returns lazy object, get values with list()
   operation = monkeyBuffer[2].split(':')[1].split(' ')
   testDividend = int(monkeyBuffer[3].split(' ')[-1])
@@ -20,7 +29,7 @@ def parseMonkey(monkeyBuffer):
     'inspectedItemCount': 0
     }
 
-def doMonkeyInspectItemAt(monkey, i: int, worryFactor: int):
+def doMonkeyInspectItemAt(monkey: Monkey, i: int, worryFactor: int):
   item = monkey['items'][i]
   operator = monkey['operator']
   operand = monkey['operand']
@@ -46,7 +55,7 @@ def doMonkeyInspectItemAt(monkey, i: int, worryFactor: int):
   monkey['inspectedItemCount'] += 1
   return newWorry
 
-def doMonkeyTestItem(item: int, monkey, monkeys: list):
+def doMonkeyTestItem(item: int, monkey: Monkey, monkeys: list):
   testDividend = monkey['testDividend']
   trueMonkeyTarget = monkey['trueMonkeyTarget']
   falseMonkeyTarget = monkey['falseMonkeyTarget']
@@ -56,19 +65,19 @@ def doMonkeyTestItem(item: int, monkey, monkeys: list):
   else:
     monkeys[falseMonkeyTarget]['items'].append(item)
 
-def doRound(monkeys, worryFactor: int):
+def doRound(monkeys: list, worryFactor: int):
   for monkey in monkeys:
     for i in range(len(monkey['items']))[::-1]: #iterate backwards to pop off the tail and prevent index out of range
       inspectedItem = doMonkeyInspectItemAt(monkey, i, worryFactor)
       doMonkeyTestItem(inspectedItem, monkey, monkeys)
       monkey['items'].pop()
 
-def printMonkeys(monkeys):
+def printMonkeys(monkeys: list):
   for i, monkey in enumerate(monkeys):
     items = monkey['items']
     print(f'Monkey {i}: {monkey}')
 
-def calculateMonkeyBusyness(monkeys):
+def calculateMonkeyBusyness(monkeys: list):
   def getInspections(monkey):
     return monkey['inspectedItemCount']
 
@@ -82,7 +91,7 @@ def main():
   monkeyBuffer = []
   worryFactor = 1
 
-  with open('input.txt') as f:
+  with open('test.txt') as f:
     for line in f:
       monkeyBuffer.append(line)
       if len(monkeyBuffer) == 7:
@@ -91,7 +100,7 @@ def main():
       if verbosityLevel > 1: print(line)
 
   if verbosityLevel > 1: print(monkeys)
-  rounds = 10_000
+  rounds = 20#10_000
   bar = Bar('Processing', max= rounds)
   for r in range(rounds):
     doRound(monkeys, worryFactor)
@@ -103,4 +112,4 @@ def main():
   print('Thank you for playing Wing Commander')
 
 if __name__ == '__main__':
-  cProfile.run('main()')
+  main()
