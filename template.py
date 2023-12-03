@@ -1,7 +1,13 @@
 #!/usr/bin/python3
+import sys
+verbosityLevel=1
 
 def main():
-  with open('test.txt') as f:
+  srcFile = 'test.txt'
+  if (len(sys.argv) > 1): srcFile = sys.argv[1]
+  if verbosityLevel > 0: print(f'srcFile: {srcFile}')
+
+  with open(srcFile) as f:
     for line in f:
       #do stuff here
       print(line)
