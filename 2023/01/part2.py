@@ -1,7 +1,7 @@
 #"!/usr/bin/python3
 import sys, re
 
-verbosityLevel=1
+verbosityLevel = -1
 nWords=[
     ['one', '1'],
     ['two', '2'],
@@ -25,15 +25,16 @@ def main():
     for line in f:
       if verbosityLevel >0: print('----------')
       if verbosityLevel >0: print(f'line: {line}')
-      #match numbers from line
-      r = re.findall('\d|one|two|three|four|five|six|seven|eight|nine', line)
-      if verbosityLevel >1: print(f'r: {r}')
+      #match numbers from line, use lookahead to not consume the match from the string
+      r = re.findall('(?=(\d|one|two|three|four|five|six|seven|eight|nine))', line)
+      if verbosityLevel > 1: print(f'r: {r}')
       calibrationString=r[0]+r[-1]
-      if verbosityLevel >1: print(f'calibrationString: {calibrationString}')
+      if verbosityLevel > 1: print(f'calibrationString: {calibrationString}')
       for nWord in nWords: calibrationString = calibrationString.replace(nWord[0], nWord[1])
-      if verbosityLevel >0: print(f'calibrationString: {calibrationString}')
+      if verbosityLevel > 0: print(f'calibrationString: {calibrationString}')
       total+=int(calibrationString)
-      if verbosityLevel >0: print(f'total: {total}')
+      if verbosityLevel > 0: print(f'total: {total}')
+      if verbosityLevel < 0: print(total)
 
   print('Thank you for playing Wing Commander')
 
