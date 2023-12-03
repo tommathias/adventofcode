@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 import sys
-verbosityLevel=1
+verbosityLevel=2
 
-def isGamePossible(bagMax, ballsSeen):
+def isShowingPossible(bagMax, ballsSeen):
   for colour in bagMax:
     if (ballsSeen[colour] > bagMax[colour]): return False
   return True
@@ -25,24 +25,38 @@ def main():
       game = line.replace('\n','').split(':')
       gameNumber = game[0].split(' ')[-1]
       if verbosityLevel > 0: print(f'gameNumber: {gameNumber}')  
-      ballsSeen={
-              "red": 0,
-              "green": 0,
-              "blue": 0
-              }
-
       rounds = game[1].split(';')
+      if verbosityLevel > 0: print('Start Game')
+      gameIsPossible = True
+
       #round is reserved word
       for thisRound in rounds:
+        if not gameIsPossible: break #for round
+        if verbosityLevel > 0: print('Start Round')
+        deez = {
+          "red": 0,
+          "green": 0,
+          "blue": 0
+          }
+
         showings = thisRound.split(',')
         for showing in showings:
           detail = showing.split(' ')
-          if verbosityLevel > 1: print(f'ballsSeen: {ballsSeen}, game: {game}, thisRound: {thisRound}, showing: {showing}, detail: {detail}')
+          #if verbosityLevel > 1: print(f'showing: {showing}, detail: {detail}')
+          
           #showing sections will always have a leading space giving e.g. detail: ['', '3'. 'blue']
-          ballsSeen[detail[2]] += int(detail[1])
-      if verbosityLevel > 0: print(f'ballsSeen: {ballsSeen}')  
-      if isGamePossible(bagMax, ballsSeen): possibleGameSum += int(gameNumber)
+          deez[detail[2]] += int(detail[1])
+        
+        print(deez)
+        if not isShowingPossible(bagMax, deez):
+          if verbosityLevel > 0: print('impossible')
+          gameIsPossible = False
+          break #for showing
+
+      if gameIsPossible: possibleGameSum += int(gameNumber)
+
       if verbosityLevel > 0: print(f'possibleGameSum: {possibleGameSum}')
+  print(possibleGameSum)
   print('Thank you for playing Wing Commander')
 
 if __name__ == '__main__': main()
