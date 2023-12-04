@@ -19,12 +19,12 @@ def main():
       #get matches
       matches = 0
       for number in numbers:
-        if number == '': continue
+        if number == '': continue #ignore empty strings caused by '01' rendered as ' 1'
         if number in winners:
           if verbosityLevel > 1: print(f'{number} is a match')
           matches+=1
       #calculate points: 2^n-1
-      if matches == 0: break
+      if matches == 0: continue
       cardPoints = 2**(matches-1)
       if verbosityLevel > 1: print(f'{matches} matches and {cardPoints} points for this card')
       totalPoints+=cardPoints
