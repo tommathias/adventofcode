@@ -38,9 +38,10 @@ def lineToMap(line:str):
     lineArr.append(char)
   return lineArr
 
-def buildMap():
+def buildMapFor(forPart: int):
   mapLines = []
-  with open(files[part]) as f:
+
+  with open(files[forPart]) as f:
     for line in f:
       mapLines.append(lineToMap(line.strip()))
   return map(mapLines)
@@ -53,7 +54,7 @@ def findStart(map:map):
 def heightAt(map: list, coords: tuple):
   return map[coords[1]][coords[0]]
 
-def withinMap(map: list, coords: tuple):
+def withinMap(map: map, coords: tuple):
   return coords[0] >= 0 and coords[0] < map.width and coords[1] >= 0 and coords[1] < map.height
 
 def canClimb(from_: str, to: str):
@@ -92,7 +93,7 @@ def step(stepTo: tuple, walk: walk, stepNow: int): #walk, just a couple of peopl
     if ord(height) > walk.highestPoint[0]:
       walk.highestPoint = (ord(height), stepNow)
 
-    if height == 'E' or height == 'z':
+    if height == 'E':
         walk.isFinished = True
         return
 
@@ -107,13 +108,13 @@ def step(stepTo: tuple, walk: walk, stepNow: int): #walk, just a couple of peopl
 def walkMap(map: map):
   start = findStart(map)
   theWalk = walk(map, 10_000)
-  step(start, theWalk, 1)
+  step(start, theWalk, 0)
   print(f'Highest point: {chr(theWalk.highestPoint[0])}, found after {theWalk.highestPoint[1]} steps')
   print('should be lower than 509')
 
 def main():
   #create 2d array of map
-  map = buildMap()
+  map = buildMapFor(part)
 
   #getrecursionlimit() returns 1000
   #walk can recurse to the limit of the map area if it walks every point
